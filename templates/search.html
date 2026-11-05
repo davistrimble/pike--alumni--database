@@ -7,6 +7,38 @@
     <form action = "/search" method = "get">
         <input type = "text" name = "q">
         <button type = "submit">Search</button>
+        <p>You searched for: {{query}}</p>
+        <p>Results are: {{results}}</p>
     </form>
+    <table border="1">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Graduation Year</th>
+            <th>Industry</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Email</th>
+            <th>LinkedIn</th>
+        </tr>
+        {% for row in results %}
+        <tr>
+        <td>{{row.first_name}}</td>
+        <td>{{row.last_name}}</td>
+        <td>{{row.grad_year}}</td>
+        <td>{{row.industry}}</td>
+        <td>{{row.company_name}}</td>
+        <td>{{row.city}} {{results.state_name}}</td>
+        <td>
+            <a href = "mailto:{{row.email}}">{{row.email}}</a>
+            </a>
+        </td>
+        <td>
+            <a href = "https://{{row.linkedin}}">{{row.linkedin}}</a>
+        </td>
+        </tr>
+        {% endfor %}
+        
+    </table>
 </body>
 </html>

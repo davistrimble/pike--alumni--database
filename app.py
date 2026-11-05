@@ -13,4 +13,6 @@ def test():
     return search(s)
 @app.route("/search")
 def search_page():
-    return render_template("search.html")
+    s=(request.args.get("q",""))
+    r = search(s)
+    return render_template("search.html", query = s, results = r)
