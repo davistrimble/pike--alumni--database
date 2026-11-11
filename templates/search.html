@@ -7,9 +7,12 @@
     <form action = "/search" method = "get">
         <input type = "text" name = "q">
         <button type = "submit">Search</button>
-        <p>You searched for: {{query}}</p>
-        <p>Results are: {{results}}</p>
     </form>
+    {% if query %}
+    <p>You searched for: "{{query}}"</p>
+    {% if not results %}
+    <p>No Results</p>
+    {% else %}
     <table border="1">
         <tr>
             <th>First Name</th>
@@ -28,17 +31,21 @@
         <td>{{row.grad_year}}</td>
         <td>{{row.industry}}</td>
         <td>{{row.company_name}}</td>
-        <td>{{row.city}} {{results.state_name}}</td>
+        <td>{{row.city}} {{row.state_name}}</td>
         <td>
-            <a href = "mailto:{{row.email}}">{{row.email}}</a>
-            </a>
+            {% if row.email %}
+                <a href = "mailto:{{row.email}}">{{row.email}}</a>
+            {% else %}
+                {{row.email}}
+            {% endif %}
         </td>
         <td>
-            <a href = "https://{{row.linkedin}}">{{row.linkedin}}</a>
+            <a href = {{row.linkedin}}>{{row.linkedin}}</a>
         </td>
         </tr>
         {% endfor %}
-        
     </table>
+    {% endif %}
+    {% endif %}
 </body>
 </html>
