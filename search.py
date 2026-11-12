@@ -3,7 +3,7 @@ import psycopg
 from psycopg.rows import dict_row
 from dotenv import load_dotenv
 
-def search(term):
+def search_it(term):
     load_dotenv()
     database_url = os.getenv("DATABASE_URL")
     with psycopg.connect(database_url) as conn:

@@ -1,0 +1,8 @@
+CREATE TABLE if NOT EXISTS members (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT,
+    is_admin BOOLEAN NOT NULL DEFAULT false,
+    create_time TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+

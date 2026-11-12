@@ -28,19 +28,31 @@
         <tr>
         <td>{{row.first_name}}</td>
         <td>{{row.last_name}}</td>
-        <td>{{row.grad_year}}</td>
-        <td>{{row.industry}}</td>
-        <td>{{row.company_name}}</td>
-        <td>{{row.city}} {{row.state_name}}</td>
+        <td>
+            {{row.grad_year or "-"}}
+        </td>
+        <td>{{row.industry or "-"}}</td>
+        <td>{{row.company_name or "-"}}</td>
+        <td>
+            {% if row.city and row.state_name %}
+                {{row.city}}, {{row.state_name}}
+            {% else %}
+                {{row.city or row.state_name or "-"}}
+            {% endif %}
+        </td>
         <td>
             {% if row.email %}
                 <a href = "mailto:{{row.email}}">{{row.email}}</a>
             {% else %}
-                {{row.email}}
+                -
             {% endif %}
         </td>
         <td>
-            <a href = {{row.linkedin}}>{{row.linkedin}}</a>
+            {% if row.linkedin %}
+                <a href = "{{row.linkedin}}">{{row.linkedin}}</a>
+            {% else %}
+                -
+            {% endif %}
         </td>
         </tr>
         {% endfor %}

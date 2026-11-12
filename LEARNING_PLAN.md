@@ -81,6 +81,14 @@ This is real personal contact info, so the site must not be public.
 
 **Concepts:** authentication, hashing, sessions, cookies, the secret key.
 
+## Phase 5.5: Make it look good, add features
+
+1. Template inheritance: a `base.html` with the shared header and nav, which every page `{% extends %}`.
+2. CSS in a `static/` folder, or a small CSS framework (Pico.css or Bootstrap) so it looks decent quickly.
+3. Features to pick from: filters (grad year, industry, state), an alumni profile page (`/alumni/<id>`), result counts, pagination instead of `LIMIT 5`.
+
+**Concepts:** template inheritance, static files, CSS basics, URL parameters in routes.
+
 ## Phase 6: Put it online
 
 - Database: a free hosted Postgres (Neon or Supabase).
