@@ -37,22 +37,22 @@
     <tbody>
     {% for row in results %}
     <tr data-alumni-id="{{ row.id }}">
-        <td class="name">{{ row.first_name|title }} {{ row.last_name }}</td>
-        <td>{{ row.grad_year or "—" }}</td>
-        <td>{{ row.industry or "—" }}</td>
-        <td>{{ row.company_name or "—" }}</td>
-        <td>
+        <td class="name" data-label="Name">{{ row.first_name|title }} {{ row.last_name }}</td>
+        <td data-label="Class">{{ row.grad_year or "—" }}</td>
+        <td data-label="Industry">{{ row.industry or "—" }}</td>
+        <td data-label="Company">{{ row.company_name or "—" }}</td>
+        <td data-label="Location">
             {% set city = (row.city or "")|trim %}
             {% set state = (row.state_name or "")|trim %}
             {{ city ~ (", " if city and state else "") ~ state or "—" }}
         </td>
-        <td class="contact">
+        <td class="contact" data-label="Email">
             {% if row.email %}
             <a href="mailto:{{ row.email }}" data-track="email">{{ row.email }}</a>
             <button type="button" class="copy" data-copy="{{ row.email }}" data-track="email" aria-label="Copy email">Copy</button>
             {% else %}—{% endif %}
         </td>
-        <td class="contact">
+        <td class="contact" data-label="LinkedIn">
             {% if row.linkedin %}
             <a href="{{ row.linkedin }}" target="_blank" rel="noopener noreferrer" data-track="linkedin">Profile ↗</a>
             <button type="button" class="copy" data-copy="{{ row.linkedin }}" data-track="linkedin" aria-label="Copy LinkedIn URL">Copy</button>

@@ -265,4 +265,43 @@ table.results {
     h1 { font-size: 1.6rem; }
     .search-form { flex-direction: column; }
     .nav { gap: 0.9rem; }
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .stat { padding: 0.75rem 0.9rem; }
+    .stat-num { font-size: 1.5rem; }
+
+    /* Search results become one card per alum on phones. */
+    .table-scroll:has(table.results:not(.admin-table)) { box-shadow: none; overflow: visible; }
+    table.results:not(.admin-table) thead { display: none; }
+    table.results:not(.admin-table),
+    table.results:not(.admin-table) tbody,
+    table.results:not(.admin-table) tr,
+    table.results:not(.admin-table) td { display: block; width: 100%; }
+    table.results:not(.admin-table) { background: none; }
+    table.results:not(.admin-table) tr {
+        background: var(--card) !important;
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--garnet);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 0.75rem;
+        padding: 0.6rem 0.9rem;
+    }
+    table.results:not(.admin-table) td {
+        border: 0;
+        padding: 0.2rem 0;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        white-space: normal;
+    }
+    table.results:not(.admin-table) td::before {
+        content: attr(data-label);
+        flex: 0 0 5.5rem;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    table.results:not(.admin-table) td.name { font-size: 1.05rem; color: var(--garnet-dark); }
+    table.results:not(.admin-table) td.name::before { display: none; }
+    table.results:not(.admin-table) td.contact a { overflow-wrap: anywhere; }
 }
