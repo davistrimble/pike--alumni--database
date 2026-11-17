@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% macro when(ts) -%}
+    {% if ts %}<time datetime="{{ ts.isoformat() }}" title="{{ ts.strftime('%Y-%m-%d %H:%M %Z') }}">{{ ts.strftime('%b %-d, %Y') }}</time>{% else %}<span class="muted">—</span>{% endif %}
+{%- endmacro %}
+{% block content %}
+<h1>Chapter admin</h1>
+
+<section class="stat-grid">
+    <div class="stat"><span class="stat-num">{{ totals.activated }}<span class="stat-of">/{{ stats|length }}</span></span><span class="stat-label">Members activated</span></div>
+    <div class="stat"><span class="stat-num">{{ totals.searches }}</span><span class="stat-label">Searches</span></div>
+    <div class="stat"><span class="stat-num">{{ totals.email_clicks + totals.email_copies }}</span><span class="stat-label">Email clicks + copies</span></div>
+    <div class="stat"><span class="stat-num">{{ totals.linkedin_clicks + totals.linkedin_copies }}</span><span class="stat-label">LinkedIn clicks + copies</span></div>
+</section>
+
+<section class="admin-tools">
+    <div class="card">
+        <h2>Approve emails</h2>
+        <p class="muted small">Approved members can create an account with the chapter code. Paste one or many, separated by commas or new lines.</p>
+        <form action="{{ url_for('admin_add_member') }}" method="post" class="stack">
+            <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+            <textarea name="emails" rows="3" placeholder="brother@vanderbilt.edu" required></textarea>
+            <button type="submit" class="button">Approve</button>
+        </form>
+    </div>
+    <div class="card">
+        <h2>Chapter sign-up code</h2>
+        <p class="muted small">
+            {% if signup_code %}Current code: <code class="code-pill">{{ signup_code }}</code>. Change it whenever it leaks.
+            {% else %}<strong>No code set: sign-up is closed.</strong> Set one to open it.{% endif %}
+        </p>
+        <form action="{{ url_for('admin_set_code') }}" method="post" class="stack">
+            <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+            <input type="text" name="code" minlength="4" placeholder="New code" autocomplete="off" required>
+            <button type="submit" class="button button-secondary">Save code</button>
+        </form>
+    </div>
+</section>
+
+<h2>Members</h2>
+<div class="table-scroll">
+<table class="results admin-table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Last login</th>
+            <th class="num">Searches</th>
+            <th class="num" title="Email clicks / copies">Email<br><span class="muted small">click / copy</span></th>
+            <th class="num" title="LinkedIn clicks / copies">LinkedIn<br><span class="muted small">click / copy</span></th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for m in stats %}
+    {% set is_me = m.id == g.member.id %}
+    <tr>
+        <td>
+            {{ m.email }}
+            {% if m.is_admin %}<span class="badge badge-gold">Admin</span>{% endif %}
+            {% if is_me %}<span class="badge">You</span>{% endif %}
+        </td>
+        <td>
+            {% if m.activated_at %}<span class="badge badge-ok">Active</span> <span class="muted small">since {{ when(m.activated_at) }}</span>
+            {% else %}<span class="badge badge-wait">Invited</span>{% endif %}
+        </td>
+        <td>{{ when(m.last_login_at) }}</td>
+        <td class="num">{{ m.searches }}</td>
+        <td class="num">{{ m.email_clicks }} / {{ m.email_copies }}</td>
+        <td class="num">{{ m.linkedin_clicks }} / {{ m.linkedin_copies }}</td>
+        <td class="actions">
+            {% if not is_me %}
+            <form action="{{ url_for('admin_toggle_admin', member_id=m.id) }}" method="post" class="inline">
+                <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+                <button type="submit" class="chip">{{ "Remove admin" if m.is_admin else "Make admin" }}</button>
+            </form>
+            {% if m.activated_at %}
+            <form action="{{ url_for('admin_reset_password', member_id=m.id) }}" method="post" class="inline"
+                  data-confirm="Clear the password for {{ m.email }}? They will need the chapter code to set a new one.">
+                <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+                <button type="submit" class="chip">Reset password</button>
+            </form>
+            {% endif %}
+            <form action="{{ url_for('admin_remove_member', member_id=m.id) }}" method="post" class="inline"
+                  data-confirm="Remove {{ m.email }} and their activity history?">
+                <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+                <button type="submit" class="chip chip-danger">Remove</button>
+            </form>
+            {% else %}<span class="muted small">—</span>{% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="muted small">Tracking stores counts only. Search text is never saved.</p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll("form[data-confirm]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      if (!confirm(form.dataset.confirm)) event.preventDefault();
+    });
+  });
+</script>
+{% endblock %}

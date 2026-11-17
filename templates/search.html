@@ -1,63 +1,72 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Pike Alumni</title>
-</head>
-<body>
-    <form action = "/search" method = "get">
-        <input type = "text" name = "q">
-        <button type = "submit">Search</button>
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Find an alum</h1>
+    <p class="muted">Search by name, city, state, industry, or company.</p>
+    <form action="{{ url_for('search_page') }}" method="get" class="search-form" role="search">
+        <input type="search" name="q" value="{{ query }}" placeholder="e.g. Nashville, Finance, Smith" aria-label="Search alumni" autofocus>
+        <button type="submit" class="button">Search</button>
     </form>
-    {% if query %}
-    <p>You searched for: "{{query}}"</p>
-    {% if not results %}
-    <p>No Results</p>
+</section>
+
+{% if query %}
+<p class="result-count muted">
+    {% if results %}
+        {{ results|length }} result{{ '' if results|length == 1 else 's' }} for “{{ query }}”
+        {% if results|length >= 50 %}(showing the first 50; try a more specific search){% endif %}
     {% else %}
-    <table border="1">
+        No alumni match “{{ query }}”. Try a city, industry, or last name.
+    {% endif %}
+</p>
+
+{% if results %}
+<div class="table-scroll">
+<table class="results">
+    <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Graduation Year</th>
+            <th>Name</th>
+            <th>Class</th>
             <th>Industry</th>
             <th>Company</th>
             <th>Location</th>
             <th>Email</th>
             <th>LinkedIn</th>
         </tr>
-        {% for row in results %}
-        <tr>
-        <td>{{row.first_name}}</td>
-        <td>{{row.last_name}}</td>
+    </thead>
+    <tbody>
+    {% for row in results %}
+    <tr data-alumni-id="{{ row.id }}">
+        <td class="name">{{ row.first_name|title }} {{ row.last_name }}</td>
+        <td>{{ row.grad_year or "—" }}</td>
+        <td>{{ row.industry or "—" }}</td>
+        <td>{{ row.company_name or "—" }}</td>
         <td>
-            {{row.grad_year or "-"}}
+            {% set city = (row.city or "")|trim %}
+            {% set state = (row.state_name or "")|trim %}
+            {{ city ~ (", " if city and state else "") ~ state or "—" }}
         </td>
-        <td>{{row.industry or "-"}}</td>
-        <td>{{row.company_name or "-"}}</td>
-        <td>
-            {% if row.city and row.state_name %}
-                {{row.city}}, {{row.state_name}}
-            {% else %}
-                {{row.city or row.state_name or "-"}}
-            {% endif %}
-        </td>
-        <td>
+        <td class="contact">
             {% if row.email %}
-                <a href = "mailto:{{row.email}}">{{row.email}}</a>
-            {% else %}
-                -
-            {% endif %}
+            <a href="mailto:{{ row.email }}" data-track="email">{{ row.email }}</a>
+            <button type="button" class="copy" data-copy="{{ row.email }}" data-track="email" aria-label="Copy email">Copy</button>
+            {% else %}—{% endif %}
         </td>
-        <td>
+        <td class="contact">
             {% if row.linkedin %}
-                <a href = "{{row.linkedin}}">{{row.linkedin}}</a>
-            {% else %}
-                -
-            {% endif %}
+            <a href="{{ row.linkedin }}" target="_blank" rel="noopener noreferrer" data-track="linkedin">Profile ↗</a>
+            <button type="button" class="copy" data-copy="{{ row.linkedin }}" data-track="linkedin" aria-label="Copy LinkedIn URL">Copy</button>
+            {% else %}—{% endif %}
         </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-    {% endif %}
-</body>
-</html>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='track.js') }}"></script>
+{% endblock %}

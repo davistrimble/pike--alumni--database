@@ -1,14 +1,26 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Sign Up</title>
-    </head>
-    <body>
-        <form action = "/signup" method = "post">
-            <input type = "email" name = "email">
-            <input type = "password" name = "password">
-            <button type = "submit">Sign Up</button>
-        </form>
-        <p>{{message}}</p>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Sign up{% endblock %}
+{% block main_class %}narrow{% endblock %}
+{% block content %}
+<section class="card auth-card">
+    <h1>Create your account</h1>
+    <p class="muted">Your email must be on the chapter's approved list. Get the chapter code from an officer.</p>
+    <form method="post" class="stack">
+        <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <label>Email
+            <input type="email" name="email" value="{{ email or '' }}" autocomplete="email" required autofocus>
+        </label>
+        <label>Chapter code
+            <input type="text" name="code" autocomplete="off" required>
+        </label>
+        <label>Password <span class="muted small">(at least 8 characters)</span>
+            <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <label>Confirm password
+            <input type="password" name="confirm" autocomplete="new-password" minlength="8" required>
+        </label>
+        <button type="submit" class="button">Create account</button>
+    </form>
+    <p class="muted small">Already signed up? <a href="{{ url_for('login') }}">Log in</a>.</p>
+</section>
+{% endblock %}

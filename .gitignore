@@ -2,3 +2,9 @@
 .env
 .DS_store
 __pycache__/
+# Real alumni data never goes in git
+data/
+*.csv
+
+# Local Claude/editor config
+.claude/
