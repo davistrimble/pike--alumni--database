@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}Pike Alumni{% endblock %} · Pike Alumni Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header class="site-header">
         <div class="wrap header-row">
             <a class="brand" href="{{ url_for('home') }}">
-                <span class="brand-mark">ΠΚΑ</span>
+                <span class="brand-mark">Sigma Pike</span>
                 <span class="brand-text">Alumni Network</span>
             </a>
             {% if g.member %}

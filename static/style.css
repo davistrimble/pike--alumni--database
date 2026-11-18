@@ -15,6 +15,7 @@
     --ok-tint: #e7f2e8;
     --danger: #a12a2a;
     --radius: 10px;
+    --font-heading: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --shadow: 0 1px 2px rgba(60, 20, 25, 0.06), 0 4px 16px rgba(60, 20, 25, 0.06);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--ink);
@@ -36,12 +37,12 @@ a { color: var(--garnet); }
 a:hover { color: var(--garnet-dark); }
 
 h1, h2 {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--font-heading);
     color: var(--garnet-dark);
-    line-height: 1.2;
+    line-height: 1.15;
 }
-h1 { font-size: 2rem; margin: 0 0 0.25rem; }
-h2 { font-size: 1.25rem; margin: 2rem 0 0.75rem; }
+h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 0.25rem; }
+h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; margin: 2rem 0 0.75rem; }
 
 .wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 16px; }
 .narrow { max-width: 460px; }
@@ -72,16 +73,16 @@ h2 { font-size: 1.25rem; margin: 2rem 0 0.75rem; }
 }
 .brand:hover { color: #fff; }
 .brand-mark {
-    font-family: Georgia, serif;
-    font-weight: 700;
-    font-size: 1.15rem;
-    letter-spacing: 0.06em;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
     color: var(--garnet-dark);
     background: var(--gold);
     border-radius: 6px;
     padding: 0.15rem 0.5rem;
 }
-.brand-text { font-weight: 600; letter-spacing: 0.02em; }
+.brand-text { font-family: var(--font-heading); font-weight: 600; }
 .nav { display: flex; align-items: center; gap: 1.25rem; }
 .nav a, .link-button {
     color: var(--gold-light);
