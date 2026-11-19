@@ -140,3 +140,12 @@ def test_removed_member_is_logged_out(client):
     login(client, "a@example.com")
     query("DELETE FROM members WHERE id = %s RETURNING id", (member_id,))
     assert client.get("/search").status_code == 302
+
+
+def test_signup_error_keeps_email_and_code_but_not_passwords(client):
+    set_code()
+    make_member("new@example.com", password=None)
+    page = signup(client, password="longenough", confirm="different1").data
+    assert b'value="new@example.com"' in page
+    assert b'value="garnet-gold"' in page
+    assert b"longenough" not in page

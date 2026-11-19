@@ -148,7 +148,7 @@ def signup():
 
         def fail(message):
             flash(message, "error")
-            return render_template("signup.html", email=email), 400
+            return render_template("signup.html", email=email, code=code), 400
 
         real_code = tracking.get_setting(tracking.SIGNUP_CODE_KEY)
         if not real_code:

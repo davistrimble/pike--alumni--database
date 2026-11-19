@@ -134,6 +134,25 @@ input:focus, textarea:focus, button:focus-visible {
     border-color: var(--gold);
 }
 
+.password-field { position: relative; }
+.password-field input { padding-right: 4.5rem; }
+.show-password {
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--garnet);
+    background: none;
+    border: 0;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+}
+.show-password:hover { background: var(--garnet-tint); }
+
 .button {
     display: inline-block;
     font: inherit;

@@ -11,16 +11,26 @@
             <input type="email" name="email" value="{{ email or '' }}" autocomplete="email" required autofocus>
         </label>
         <label>Chapter code
-            <input type="text" name="code" autocomplete="off" required>
+            <input type="text" name="code" value="{{ code or '' }}" autocomplete="off" required>
         </label>
         <label>Password <span class="muted small">(at least 8 characters)</span>
-            <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+            <div class="password-field">
+                <input type="password" name="password" autocomplete="new-password" minlength="8" required data-password>
+                <button type="button" class="show-password" aria-pressed="false">Show</button>
+            </div>
         </label>
         <label>Confirm password
-            <input type="password" name="confirm" autocomplete="new-password" minlength="8" required>
+            <div class="password-field">
+                <input type="password" name="confirm" autocomplete="new-password" minlength="8" required data-password>
+                <button type="button" class="show-password" aria-pressed="false">Show</button>
+            </div>
         </label>
         <button type="submit" class="button">Create account</button>
     </form>
     <p class="muted small">Already signed up? <a href="{{ url_for('login') }}">Log in</a>.</p>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='password.js') }}"></script>
 {% endblock %}

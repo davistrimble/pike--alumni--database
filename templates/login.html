@@ -11,10 +11,17 @@
             <input type="email" name="email" value="{{ email or '' }}" autocomplete="email" required autofocus>
         </label>
         <label>Password
-            <input type="password" name="password" autocomplete="current-password" required>
+            <div class="password-field">
+                <input type="password" name="password" autocomplete="current-password" required data-password>
+                <button type="button" class="show-password" aria-pressed="false">Show</button>
+            </div>
         </label>
         <button type="submit" class="button">Log in</button>
     </form>
     <p class="muted small">First time here? <a href="{{ url_for('signup') }}">Create your account</a>.</p>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='password.js') }}"></script>
 {% endblock %}
