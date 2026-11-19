@@ -122,18 +122,20 @@ def login():
         email = request.form.get("email", "")
         password = request.form.get("password", "")
         member = members.get_member(email)
-        if (
-            member
-            and member["password_hash"]
-            and check_password_hash(member["password_hash"], password)
-        ):
+        if member and not member["password_hash"]:
+            # Approved but never signed up (or an admin reset them): send them
+            # to sign-up with their email already filled in.
+            session["prefill_email"] = members.normalize_email(email)
+            flash("You haven't created your account yet. Set a password to finish.", "info")
+            return redirect(url_for("signup"))
+        if member and check_password_hash(member["password_hash"], password):
             session.clear()
             session["member_id"] = member["id"]
             members.record_login(member["id"])
             return redirect(safe_next(request.args.get("next")))
         flash("Wrong email or password.", "error")
         return render_template("login.html", email=email), 401
-    return render_template("login.html")
+    return render_template("login.html", email=session.pop("prefill_email", None))
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -159,6 +161,7 @@ def signup():
         if not member:
             return fail("This email isn't on the approved list. Ask a chapter admin to add it.")
         if member["password_hash"]:
+            session["prefill_email"] = members.normalize_email(email)
             flash("This account already exists. Log in instead.", "info")
             return redirect(url_for("login"))
         if len(password) < MIN_PASSWORD_LENGTH:
@@ -167,9 +170,10 @@ def signup():
             return fail("The two passwords don't match.")
 
         members.set_password(email, generate_password_hash(password))
+        session["prefill_email"] = members.normalize_email(email)
         flash("Account created. Log in to start searching.", "success")
         return redirect(url_for("login"))
-    return render_template("signup.html")
+    return render_template("signup.html", email=session.pop("prefill_email", None))
 
 
 @app.route("/logout", methods=["POST"])

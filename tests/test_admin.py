@@ -84,7 +84,8 @@ def test_reset_password_logs_member_out_and_lets_them_sign_up_again(client):
     assert query("SELECT count(*) AS n FROM search_events")[0]["n"] == 1  # history kept
 
     post(client, "/logout")
-    assert login(client, "b@example.com").status_code == 401
+    response = login(client, "b@example.com")
+    assert response.headers["Location"].endswith("/signup")  # no password anymore
     post(
         client,
         "/signup",

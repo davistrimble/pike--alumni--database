@@ -100,9 +100,31 @@ def test_login_wrong_password(client):
     assert b"Wrong email or password" in response.data
 
 
-def test_invited_member_without_password_cannot_log_in(client):
+def test_invited_member_logging_in_is_sent_to_signup_with_email_filled(client):
     make_member("a@example.com", password=None)
-    assert login(client, "a@example.com", "").status_code == 401
+    response = login(client, " A@Example.com", "anything")
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/signup")
+    page = client.get("/signup").data
+    assert b"haven&#39;t created your account yet" in page
+    assert b'value="a@example.com"' in page
+    # The prefill is used once, not on every later visit.
+    assert b'value="a@example.com"' not in client.get("/signup").data
+    # And no session was started.
+    assert client.get("/search").status_code == 302
+
+
+def test_unknown_email_still_gets_generic_login_error(client):
+    response = login(client, "stranger@example.com", "anything")
+    assert response.status_code == 401
+    assert b"Wrong email or password" in response.data
+
+
+def test_successful_signup_prefills_login_email(client):
+    set_code()
+    make_member("new@example.com", password=None)
+    signup(client)
+    assert b'value="new@example.com"' in client.get("/login").data
 
 
 def test_login_records_last_login_and_redirects(client):
